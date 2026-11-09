@@ -12,7 +12,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: radial-gradient(circle at 80% 80%, #064e3b 0%, #0f172a 70%);
       color: #ffffff;
-      padding: 30px 40px;
+      padding: 24px 36px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -22,7 +22,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .badge {
       display: inline-flex;
@@ -31,16 +31,16 @@
       background: rgba(168, 85, 247, 0.2);
       border: 1px solid #a855f7;
       color: #d8b4fe;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .hero-title {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
@@ -48,14 +48,14 @@
       -webkit-text-fill-color: transparent;
     }
     .hero-sub {
-      font-size: 15px;
+      font-size: 14px;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 24px;
       font-weight: 800;
       color: #a855f7;
@@ -66,14 +66,16 @@
       flex: 1;
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
+      gap: 20px;
+      height: 640px;
+      overflow: hidden;
     }
 
     .feature-card {
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
-      padding: 24px;
+      padding: 20px;
       color: #0f172a;
       display: flex;
       flex-direction: column;
@@ -82,16 +84,16 @@
     .card-title {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 18px;
+      gap: 8px;
+      font-size: 17px;
       font-weight: 800;
       color: #0f172a;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .card-desc {
       font-size: 12px;
       color: #64748b;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     /* Terminal / Prompt preview */
@@ -99,11 +101,11 @@
       flex: 1;
       background: #0f172a;
       border-radius: 8px;
-      padding: 16px;
+      padding: 14px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
+      font-size: 11.5px;
       color: #38bdf8;
-      line-height: 1.6;
+      line-height: 1.55;
       border: 1px solid #334155;
       overflow: hidden;
     }
@@ -114,7 +116,7 @@
     .budget-stack {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
     }
 
@@ -122,32 +124,46 @@
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
-    .b-name { font-size: 14px; font-weight: 800; color: #1e293b; }
+    .b-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .b-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+    }
+    .b-name { font-size: 13px; font-weight: 800; color: #1e293b; }
     .b-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
-    .b-total { font-size: 16px; font-weight: 900; color: #059669; }
+    .b-total { font-size: 15px; font-weight: 900; color: #059669; }
 
     .json-box {
       background: #eff6ff;
       border: 1px dashed #3b82f6;
       border-radius: 8px;
-      padding: 16px;
-      margin-top: 10px;
+      padding: 14px;
+      margin-top: auto;
       text-align: center;
     }
-    .json-box h4 { font-size: 13px; font-weight: 800; color: #1e40af; margin-bottom: 4px; }
-    .json-box p { font-size: 11px; color: #64748b; margin-bottom: 10px; }
+    .json-box h4 { font-size: 13px; font-weight: 800; color: #1e40af; margin-bottom: 3px; }
+    .json-box p { font-size: 11px; color: #64748b; margin-bottom: 8px; }
     .btn-json-demo {
       background: #2563eb;
       color: #ffffff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 5px;
+      font-size: 11px;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
@@ -179,13 +195,16 @@
       <div class="terminal-box">
         <span class="prompt-comment"># Gerado automaticamente pelo CotaFácil:</span><br>
         <span class="prompt-highlight">📦 DADOS DE COTAÇÃO PARA REVISÃO:</span><br>
-        Orçamento: PC ENGENHARIA 2 (9 produtos) • Total: R$ 4.792,00<br><br>
+        Orçamento: PC ENGENHARIA (3 produtos) • Total: R$ 4.225,32<br><br>
         1. Placa-Mãe AMD AM4 B550M - R$ 1.333,32 (KaBuM)<br>
         2. SSD Kingston 1TB NVMe M.2 - R$ 993,00 (Amazon)<br>
-        3. Memória Corsair 16GB DDR4 - R$ 389,00 (Mercado Livre)<br><br>
-        <span class="prompt-comment"># Instruções enviadas para o Modelo:</span><br>
+        3. Monitor Dell 27" 4K Ultra HD - R$ 1.899,00 (Mercado Livre)<br><br>
+        <span class="prompt-comment"># Instruções enviadas para a IA:</span><br>
         <span class="prompt-highlight">🤖 INSTRUÇÕES:</span><br>
-        "Revise esta cotação: avalie se os preços estão competitivos, analise a compatibilidade entre as peças e sugira alternativas com melhor custo-benefício."
+        "Revise este orçamento de compras:<br>
+        1. Avalie se os preços estão competitivos e condizentes com o mercado.<br>
+        2. Analise se as peças são compatíveis entre si.<br>
+        3. Sugira alternativas de melhor custo-benefício ou marcas recomendadas."
       </div>
     </div>
 
@@ -194,23 +213,29 @@
       <div class="card-title">
         <span>📑</span> Múltiplos Orçamentos & JSON
       </div>
-      <p class="card-desc">Duplique orçamentos para testar variações de preços sem perder o histórico do original.</p>
+      <p class="card-desc">Duplique orçamentos para testar variações de peças sem perder o histórico do original.</p>
 
       <div class="budget-stack">
         <div class="budget-item-box" style="border-left: 4px solid #2563eb;">
-          <div>
-            <div class="b-name">PC ENGENHARIA (Ativo)</div>
-            <div class="b-meta">9 produtos • Emitido em 09/11/2026</div>
+          <div class="b-item-left">
+            <img src="products/motherboard.jpg" class="b-thumb" alt="Placa-Mãe" />
+            <div>
+              <div class="b-name">PC ENGENHARIA (Ativo)</div>
+              <div class="b-meta">3 produtos • Placa B550M + SSD + Monitor</div>
+            </div>
           </div>
-          <div class="b-total">R$ 4.792,00</div>
+          <div class="b-total">R$ 4.225,32</div>
         </div>
 
         <div class="budget-item-box" style="border-left: 4px solid #a855f7;">
-          <div>
-            <div class="b-name">PC ENGENHARIA (Cópia - Opção AMD)</div>
-            <div class="b-meta">9 produtos • Variação de peças</div>
+          <div class="b-item-left">
+            <img src="products/ssd.jpg" class="b-thumb" alt="SSD" />
+            <div>
+              <div class="b-name">PC ENGENHARIA (Cópia Econômica)</div>
+              <div class="b-meta">3 produtos • Opção com peças alternativas</div>
+            </div>
           </div>
-          <div class="b-total">R$ 4.250,00</div>
+          <div class="b-total">R$ 3.650,00</div>
         </div>
 
         <div class="json-box">

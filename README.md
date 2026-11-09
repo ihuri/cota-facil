@@ -47,7 +47,7 @@
 
 1. Clone ou baixe este repositório no seu computador:
    ```bash
-   git clone https://github.com/SEU-USUARIO/cota-facil.git
+   git clone https://github.com/ihuri/cota-facil.git
    ```
 2. Abra o Google Chrome e acesse a página de extensões:
    ```text
@@ -134,5 +134,5 @@ Este projeto está licenciado sob a licença **MIT** — consulte o arquivo [LIC
 ---
 
 <p align="center">
-  Desenvolvido com foco em produtividade, economia e compras inteligentes. 🚀
+  Desenvolvido por <a href="https://github.com/ihuri"><strong>Ihuri Barboza</strong></a> com foco em produtividade, economia e compras inteligentes. 🚀
 </p>

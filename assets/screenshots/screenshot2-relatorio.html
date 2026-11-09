@@ -12,7 +12,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 70%);
       color: #ffffff;
-      padding: 30px 40px;
+      padding: 24px 36px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -22,7 +22,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .badge {
       display: inline-flex;
@@ -31,16 +31,16 @@
       background: rgba(16, 185, 129, 0.2);
       border: 1px solid #10b981;
       color: #6ee7b7;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .hero-title {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
@@ -48,14 +48,14 @@
       -webkit-text-fill-color: transparent;
     }
     .hero-sub {
-      font-size: 15px;
+      font-size: 14px;
       color: #94a3b8;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .brand-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 24px;
       font-weight: 800;
       color: #6ee7b7;
@@ -66,17 +66,17 @@
       flex: 1;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      overflow: hidden;
+      align-items: center;
     }
 
     .paper-card {
-      width: 920px;
+      width: 1040px;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15);
-      padding: 28px 36px;
+      padding: 20px 28px;
       color: #0f172a;
+      overflow: hidden;
     }
 
     /* Action bar inside report */
@@ -88,7 +88,7 @@
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       padding: 8px 14px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     .status-pill {
       font-size: 11px;
@@ -121,65 +121,104 @@
     .paper-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 16px;
-      margin-bottom: 20px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
     }
-    .paper-title { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
-    .paper-meta { font-size: 12px; color: #64748b; }
+    .paper-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 3px; }
+    .paper-meta { font-size: 11px; color: #64748b; }
     .paper-total-card {
       background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       border: 1px solid #bfdbfe;
       border-radius: 8px;
-      padding: 10px 18px;
+      padding: 8px 16px;
       text-align: right;
     }
-    .paper-total-card span { font-size: 10px; font-weight: 800; color: #2563eb; letter-spacing: 0.5px; }
-    .paper-total-card strong { display: block; font-size: 20px; font-weight: 900; color: #1e3a8a; }
+    .paper-total-card span { font-size: 9px; font-weight: 800; color: #2563eb; letter-spacing: 0.5px; }
+    .paper-total-card strong { display: block; font-size: 18px; font-weight: 900; color: #1e3a8a; }
 
-    /* Items in 3 lines */
+    /* Items in 3 columns with real photos */
     .items-grid {
       display: flex;
-      gap: 16px;
+      gap: 14px;
+      width: 100%;
+      margin-bottom: 16px;
     }
     .item-card {
-      flex: 1;
+      flex: 1 1 0;
+      min-width: 0;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       background: #fafafa;
     }
     .item-line-1 {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      align-items: baseline;
+      font-size: 12px;
       font-weight: 800;
       color: #0f172a;
-      border-bottom: 1px solid #f1f5f9;
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+      gap: 6px;
     }
-    .item-line-1 .price { color: #059669; }
+    .item-line-1 span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+    .item-line-1 .price {
+      color: #059669;
+      font-size: 13px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
     .item-line-2-img {
-      height: 90px;
+      height: 125px;
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      margin-bottom: 10px;
-      color: #64748b;
+      overflow: hidden;
+      margin-bottom: 8px;
+      padding: 6px;
+    }
+    .item-line-2-img img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
     }
     .item-line-3-link {
-      font-size: 11px;
+      font-size: 10.5px;
       color: #2563eb;
       text-decoration: underline;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* Final Footer */
+    .paper-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 11px;
+      color: #475569;
+    }
+    .paper-footer-bar strong {
+      font-size: 14px;
+      color: #059669;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -188,8 +227,8 @@
   <div class="top-banner">
     <div>
       <span class="badge">Exportação & Impressão</span>
-      <h1 class="hero-title">Relatórios em PDF Profissionais com Prints e Links</h1>
-      <p class="hero-sub">Estrutura de 3 linhas por produto: Nome e Valor, Foto da Tela e Link direto para compra.</p>
+      <h1 class="hero-title">Relatórios em PDF Profissionais com Fotos e Links</h1>
+      <p class="hero-sub">Estrutura de 3 linhas por produto: Nome e Valor, Foto Real/Print e Link direto para compra.</p>
     </div>
     <div class="brand-logo">
       <span>📄</span> PDF Nativo
@@ -210,56 +249,61 @@
       <div class="paper-header">
         <div>
           <h2 class="paper-title">CotaFácil • Orçamento: PC ENGENHARIA</h2>
-          <p class="paper-meta">Emitido em: 09/11/2026 • Total de Produtos: 9 itens selecionados</p>
+          <p class="paper-meta">Emitido em: 09/11/2026 • 3 produtos selecionados</p>
         </div>
         <div class="paper-total-card">
-          <span>VALOR TOTAL DO ORÇAMENTO</span>
-          <strong>R$ 4.792,00</strong>
+          <span>VALOR TOTAL CONSOLIDADO</span>
+          <strong>R$ 4.225,32</strong>
         </div>
       </div>
 
       <div class="items-grid">
-        <!-- Item 1 -->
+        <!-- Item 1: Placa-Mãe -->
         <div class="item-card">
           <div class="item-line-1">
             <span>1. Placa-Mãe AMD B550M</span>
             <span class="price">R$ 1.333,32</span>
           </div>
           <div class="item-line-2-img">
-            📸 Print da Tela (KaBuM)
+            <img src="products/motherboard.jpg" alt="Placa-Mãe AMD B550M" />
           </div>
           <div class="item-line-3-link">
             Link: https://www.kabum.com.br/produto/placa-mae-amd...
           </div>
         </div>
 
-        <!-- Item 2 -->
+        <!-- Item 2: SSD Kingston -->
         <div class="item-card">
           <div class="item-line-1">
             <span>2. SSD Kingston 1TB NVMe</span>
             <span class="price">R$ 993,00</span>
           </div>
           <div class="item-line-2-img">
-            📸 Print da Tela (Amazon)
+            <img src="products/ssd.jpg" alt="SSD Kingston NVMe" />
           </div>
           <div class="item-line-3-link">
             Link: https://www.amazon.com.br/dp/B0BBWH1R8H...
           </div>
         </div>
 
-        <!-- Item 3 -->
+        <!-- Item 3: Monitor Dell 27" -->
         <div class="item-card">
           <div class="item-line-1">
             <span>3. Monitor Dell 27" 4K</span>
             <span class="price">R$ 1.899,00</span>
           </div>
           <div class="item-line-2-img">
-            📸 Print da Tela (Mercado Livre)
+            <img src="products/monitor.jpg" alt="Monitor Dell 27" />
           </div>
           <div class="item-line-3-link">
             Link: https://www.mercadolivre.com.br/p/MLB2891...
           </div>
         </div>
+      </div>
+
+      <div class="paper-footer-bar">
+        <span>Resumo: 3 produtos com links verificados e prints arquivados.</span>
+        <strong>TOTAL DO ORÇAMENTO: R$ 4.225,32</strong>
       </div>
 
     </div>
