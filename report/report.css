@@ -1,0 +1,371 @@
+/* Estilos do Relatório de Orçamento (Inspirado em Tailwind CSS) */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --success: #059669;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-500: #64748b;
+  --gray-700: #334155;
+  --gray-900: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+  line-height: 1.5;
+  padding-bottom: 60px;
+}
+
+/* Barra superior de ações */
+.action-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 12px 24px;
+}
+
+.action-bar-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.action-info .badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--success);
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.action-info h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-500);
+}
+
+/* Folha do Relatório (Paper) */
+.report-paper {
+  max-width: 900px;
+  margin: 30px auto;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--gray-200);
+}
+
+/* Cabeçalho do Orçamento */
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.budget-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.budget-meta {
+  font-size: 13px;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  color: var(--gray-300);
+}
+
+.header-total-card {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: right;
+  min-width: 220px;
+}
+
+.header-total-card .total-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+}
+
+.header-total-card .total-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-top: 4px;
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--gray-200);
+  margin: 24px 0 32px 0;
+}
+
+/* Itens do Orçamento: Formato 3 Linhas (Nome - Valor, Imagem, Link) */
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.quote-item-card {
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  page-break-inside: avoid;
+}
+
+/* Linha 1: Nome do produto - Valor */
+.item-line-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 14px;
+}
+
+.item-title-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  flex: 1;
+}
+
+.item-price-text {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--success);
+  white-space: nowrap;
+}
+
+.item-qty-badge {
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--gray-500);
+  margin-left: 6px;
+}
+
+/* Linha 2: Imagem / Print da Tela */
+.item-line-image {
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 420px;
+}
+
+.item-line-image img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  display: block;
+}
+
+.item-no-image {
+  padding: 30px;
+  color: var(--gray-500);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Linha 3: Link do Produto */
+.item-line-link {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gray-100);
+  font-size: 13px;
+}
+
+.item-line-link span {
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-right: 6px;
+}
+
+.item-line-link a {
+  color: var(--primary);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.item-line-link a:hover {
+  color: var(--primary-hover);
+}
+
+/* Rodapé Final */
+.report-footer {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 2px solid var(--gray-300);
+  page-break-inside: avoid;
+}
+
+.final-summary {
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.final-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 6px 0;
+}
+
+.final-row.total-highlight {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gray-900);
+  border-top: 1px solid var(--gray-200);
+  margin-top: 8px;
+  padding-top: 12px;
+}
+
+.final-row.total-highlight strong {
+  font-size: 24px;
+  color: var(--success);
+}
+
+.footer-notes {
+  font-size: 12px;
+  color: var(--gray-500);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Regras de Impressão (Print / Salvar como PDF) */
+@media print {
+  body {
+    background-color: #ffffff;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .report-paper {
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .quote-item-card {
+    border: 1px solid #d1d5db;
+    box-shadow: none;
+    page-break-inside: avoid;
+    margin-bottom: 24px;
+  }
+
+  .item-line-image {
+    max-height: 380px;
+  }
+
+  .item-line-image img {
+    max-height: 380px;
+  }
+
+  a {
+    text-decoration: underline !important;
+    color: #1d4ed8 !important;
+  }
+}

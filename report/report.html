@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório de Orçamento</title>
+  <link rel="stylesheet" href="report.css">
+  <script src="../popup/pdf-builder.js"></script>
+</head>
+<body>
+  <!-- Barra de Ações Superior (Oculta na impressão) -->
+  <header class="no-print action-bar">
+    <div class="action-bar-content">
+      <div class="action-info">
+        <span class="badge">Relatório Pronto</span>
+        <h1 id="top-title">Carregando orçamento...</h1>
+      </div>
+      <div class="action-buttons">
+        <button id="btn-print" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Salvar como PDF / Imprimir
+        </button>
+        <button id="btn-download-pdf" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Baixar Arquivo .PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Imprimível do Orçamento -->
+  <main class="report-paper">
+    <div class="report-header">
+      <div class="header-main">
+        <div class="brand">
+          <span class="brand-icon">🛒</span>
+          <span class="brand-text">Orçamento de Compras</span>
+        </div>
+        <h2 id="budget-name" class="budget-title">Nome do Orçamento</h2>
+        <p class="budget-meta">
+          <span>Emitido em: <strong id="budget-date">-</strong></span>
+          <span class="dot">•</span>
+          <span>Itens: <strong id="budget-items-count">0</strong></span>
+        </p>
+      </div>
+      <div class="header-total-card">
+        <span class="total-label">VALOR TOTAL CONSOLIDADO</span>
+        <span id="budget-header-total" class="total-value">R$ 0,00</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Lista de Itens do Orçamento -->
+    <section id="items-container" class="items-list">
+      <!-- Inserido dinamicamente via JavaScript -->
+    </section>
+
+    <!-- Resumo Final -->
+    <footer class="report-footer">
+      <div class="final-summary">
+        <div class="final-row">
+          <span>Quantidade de Produtos Selecionados:</span>
+          <strong id="footer-total-items">0</strong>
+        </div>
+        <div class="final-row total-highlight">
+          <span>Total Geral do Orçamento:</span>
+          <strong id="footer-total-amount">R$ 0,00</strong>
+        </div>
+      </div>
+      <div class="footer-notes">
+        <p>Documento gerado automaticamente pela extensão <strong>Gestor de Orçamentos</strong> para Google Chrome.</p>
+        <p>Os preços e disponibilidades estão sujeitos a alterações pelos fornecedores nos links indicados.</p>
+      </div>
+    </footer>
+  </main>
+
+  <script src="report.js"></script>
+</body>
+</html>

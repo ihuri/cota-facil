@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Orçamentos</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="pdf-builder.js"></script>
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Cabeçalho & Seleção de Orçamento -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand-title">
+          <span class="icon">🛒</span>
+          <h2>Orçamentos</h2>
+        </div>
+        <button id="btn-new-budget" class="btn btn-sm btn-outline-primary" title="Criar novo orçamento">
+          + Novo
+        </button>
+      </div>
+
+      <div class="budget-selector-bar">
+        <label for="budget-select" class="sr-only">Orçamento ativo</label>
+        <select id="budget-select" class="form-select">
+          <!-- Opções preenchidas via JS -->
+        </select>
+        <button id="btn-edit-budget" class="icon-btn" title="Renomear orçamento atual">✏️</button>
+        <button id="btn-delete-budget" class="icon-btn icon-btn-danger" title="Excluir orçamento atual">🗑️</button>
+      </div>
+    </header>
+
+    <!-- Modal Inline para Criar/Editar Orçamento -->
+    <div id="budget-modal" class="modal hidden">
+      <div class="modal-content">
+        <h4 id="modal-title">Novo Orçamento</h4>
+        <input type="text" id="modal-budget-name" class="form-input" placeholder="Ex: Reforma Cozinha, PC Gamer..." maxlength="60" />
+        <div class="modal-actions">
+          <button id="btn-modal-cancel" class="btn btn-sm btn-secondary">Cancelar</button>
+          <button id="btn-modal-save" class="btn btn-sm btn-primary">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 1: Captura do Produto na Página Atual -->
+    <section class="card capture-card">
+      <div class="card-header">
+        <span class="card-tag">Página Atual</span>
+        <button id="btn-refresh-capture" class="text-link" title="Recapturar dados da página">Recarregar dados</button>
+      </div>
+
+      <div id="capture-status" class="status-msg hidden"></div>
+
+      <form id="form-add-product" class="capture-form">
+        <div class="form-group">
+          <label for="product-title">Nome do Produto</label>
+          <input type="text" id="product-title" class="form-input" placeholder="Detectando nome..." required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-7">
+            <label for="product-price">Preço Unitário (R$)</label>
+            <input type="number" step="0.01" id="product-price" class="form-input" placeholder="0,00" required />
+          </div>
+          <div class="form-group col-5">
+            <label for="product-quantity">Qtd</label>
+            <input type="number" id="product-quantity" class="form-input text-center" value="1" min="1" max="999" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="product-url">URL</label>
+          <input type="url" id="product-url" class="form-input text-sm" placeholder="https://..." readonly />
+        </div>
+
+        <!-- Preview da Imagem / Print da Tela -->
+        <div class="screenshot-preview-box">
+          <div class="preview-header">
+            <span>Print da Tela / Produto</span>
+            <button type="button" id="btn-retake-screenshot" class="text-link">Tirar novo print</button>
+          </div>
+          <div id="screenshot-container" class="preview-img-container">
+            <span class="placeholder-text">Capturando print...</span>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-add-to-budget" class="btn btn-success btn-block">
+          ➕ Adicionar ao Orçamento
+        </button>
+      </form>
+    </section>
+
+    <!-- Seção 2: Itens do Orçamento Selecionado -->
+    <section class="card items-card">
+      <div class="card-header">
+        <span class="card-title">Itens do Orçamento (<span id="items-count">0</span>)</span>
+        <button id="btn-clear-items" class="text-link text-danger" title="Limpar todos os itens deste orçamento">Limpar</button>
+      </div>
+
+      <div id="items-list" class="items-list-container">
+        <!-- Itens inseridos via JS -->
+      </div>
+    </section>
+
+    <!-- Barra Fixa Inferior: Totais e Ações de Exportação -->
+    <footer class="app-footer">
+      <div class="footer-total-row">
+        <span class="total-caption">Total Geral:</span>
+        <span id="footer-total-price" class="total-number">R$ 0,00</span>
+      </div>
+
+      <div class="footer-actions">
+        <button id="btn-generate-pdf" class="btn btn-primary" title="Baixar PDF formatado">
+          📄 Gerar PDF
+        </button>
+        <button id="btn-view-report" class="btn btn-secondary" title="Abrir página completa com opção de impressão">
+          🖨️ Relatório
+        </button>
+      </div>
+
+      <div class="batch-option">
+        <label>
+          <input type="checkbox" id="chk-update-prints" />
+          Atualizar prints das páginas ao gerar PDF
+        </label>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
