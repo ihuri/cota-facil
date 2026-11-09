@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot 1 - Captura de Produtos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 1280px;
+      height: 800px;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 80% 20%, #1e3a8a 0%, #0f172a 70%);
+      color: #ffffff;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Top Banner */
+    .top-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37, 99, 235, 0.25);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #60a5fa;
+    }
+
+    /* Main Showcase Area */
+    .showcase-area {
+      flex: 1;
+      display: flex;
+      gap: 24px;
+      position: relative;
+    }
+
+    /* Browser Mockup (E-commerce Page) */
+    .browser-frame {
+      flex: 1;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .browser-header {
+      background: #f1f5f9;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      gap: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+    .browser-url-bar {
+      flex: 1;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #475569;
+    }
+
+    /* Store Content Mock */
+    .store-mock {
+      padding: 24px;
+      color: #1e293b;
+      display: flex;
+      gap: 30px;
+      flex: 1;
+      background: #ffffff;
+    }
+    .store-product-img {
+      width: 220px;
+      height: 220px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+    }
+    .store-product-img span { font-size: 48px; margin-bottom: 8px; }
+    .store-product-img p { font-size: 11px; color: #64748b; font-weight: 600; }
+    .store-info { flex: 1; }
+    .store-tag { font-size: 11px; color: #2563eb; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+    .store-title { font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.3; margin-bottom: 10px; }
+    .store-stars { color: #f59e0b; font-size: 13px; margin-bottom: 16px; }
+    .store-price-tag { font-size: 13px; color: #64748b; }
+    .store-price { font-size: 32px; font-weight: 900; color: #059669; margin: 4px 0 16px 0; }
+    .store-btn { background: #ff6500; color: #ffffff; border: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+
+    /* CotaFacil Popup Mockup (Floating on the right) */
+    .popup-mockup {
+      width: 380px;
+      background: #f8fafc;
+      border-radius: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 0 1px #cbd5e1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: #0f172a;
+    }
+
+    .p-header {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .p-brand-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .p-brand { font-size: 15px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px; }
+    .p-btn-novo { background: none; border: 1px solid #2563eb; color: #2563eb; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 5px; }
+    
+    .p-selector-bar { display: flex; gap: 6px; align-items: center; }
+    .p-select { flex: 1; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px 8px; font-size: 12px; font-weight: 700; color: #1e293b; }
+    .p-icon-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+
+    .p-backup-bar { display: flex; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
+    .p-btn-subtle { flex: 1; background: #f8fafc; border: 1px solid #cbd5e1; font-size: 10px; font-weight: 700; color: #475569; padding: 4px; border-radius: 4px; text-align: center; }
+
+    /* Detected Card */
+    .p-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; }
+    .p-card-tag { font-size: 10px; font-weight: 800; color: #2563eb; text-transform: uppercase; margin-bottom: 6px; display: block; }
+    .p-input { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 5px 8px; font-size: 11px; color: #0f172a; margin-bottom: 6px; font-weight: 600; }
+    .p-row { display: flex; gap: 6px; }
+    
+    .p-preview-box { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #64748b; font-weight: 600; margin-bottom: 8px; }
+    .p-btn-add { background: #059669; color: #ffffff; border: none; width: 100%; padding: 8px; font-size: 12px; font-weight: 700; border-radius: 6px; }
+
+    /* Items summary */
+    .p-items-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+    .p-item-row { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 8px; border-radius: 6px; font-size: 11px; }
+
+    /* Footer */
+    .p-footer { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; }
+    .p-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .p-total-val { font-size: 16px; font-weight: 900; color: #059669; }
+    .p-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+    .p-btn-act { padding: 6px 4px; font-size: 10px; font-weight: 700; border-radius: 5px; border: none; text-align: center; }
+    .p-btn-act-blue { background: #2563eb; color: #fff; }
+    .p-btn-act-gray { background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; }
+  </style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <div>
+      <span class="badge">Chrome Extension • Manifest V3</span>
+      <h1 class="hero-title">Capture Produtos, Preços e Prints em 1 Clique</h1>
+      <p class="hero-sub">Navegue por e-commerces e monte orçamentos inteligentes instantaneamente.</p>
+    </div>
+    <div class="brand-logo">
+      <span>🛒</span> CotaFácil
+    </div>
+  </div>
+
+  <div class="showcase-area">
+    <!-- Browser Mockup com E-commerce -->
+    <div class="browser-frame">
+      <div class="browser-header">
+        <div class="browser-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="browser-url-bar">
+          🔒 https://www.kabum.com.br/produto/placa-mae-amd-am4-b550m-gaming
+        </div>
+      </div>
+      <div class="store-mock">
+        <div class="store-product-img">
+          <span>⚡</span>
+          <p>Placa-Mãe AMD B550M</p>
+        </div>
+        <div class="store-info">
+          <span class="store-tag">Hardware • Em Estoque</span>
+          <h2 class="store-title">Placa-Mãe AMD AM4 B550M DDR4 Ultra Fast Gaming Edition</h2>
+          <div class="store-stars">★★★★★ (184 avaliações)</div>
+          <div class="store-price-tag">Preço à vista no PIX:</div>
+          <div class="store-price">R$ 1.333,32</div>
+          <button class="store-btn">🛒 Adicionar ao Carrinho</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CotaFacil Extension Popup -->
+    <div class="popup-mockup">
+      <div class="p-header">
+        <div class="p-brand-row">
+          <div class="p-brand"><span>🛒</span> CotaFácil</div>
+          <button class="p-btn-novo">+ Novo</button>
+        </div>
+        <div class="p-selector-bar">
+          <div class="p-select">PC ENGENHARIA (9 itens) ▼</div>
+          <div class="p-icon-btn">📑</div>
+          <div class="p-icon-btn">✏️</div>
+          <div class="p-icon-btn" style="color: #dc2626; font-weight:bold;">✕</div>
+        </div>
+        <div class="p-backup-bar">
+          <div class="p-btn-subtle">⬇️ Exportar JSON</div>
+          <div class="p-btn-subtle">⬆️ Importar JSON</div>
+        </div>
+      </div>
+
+      <!-- Detected Product Card -->
+      <div class="p-card">
+        <span class="p-card-tag">Página Atual Detectada</span>
+        <input class="p-input" value="Placa-Mãe AMD AM4 B550M Ultra Fast" />
+        <div class="p-row">
+          <input class="p-input" style="flex:2;" value="R$ 1.333,32" />
+          <input class="p-input" style="flex:1; text-align:center;" value="Qtd: 1" />
+        </div>
+        <div class="p-preview-box">
+          📸 Print da Tela Capturado Automaticamente
+        </div>
+        <button class="p-btn-add">➕ Adicionar ao Orçamento</button>
+      </div>
+
+      <!-- Items List Sample -->
+      <div class="p-card">
+        <div class="p-items-header">
+          <span>Itens no Orçamento (9)</span>
+          <span style="color:#2563eb; cursor:pointer;">🔄 Atualizar Preços</span>
+        </div>
+        <div class="p-item-row">
+          <span>SSD Kingston 1TB NVMe M.2</span>
+          <strong style="color:#059669;">R$ 993,00</strong>
+        </div>
+      </div>
+
+      <!-- Footer Summary -->
+      <div class="p-footer">
+        <div class="p-total-row">
+          <span style="font-size:12px; font-weight:700;">Total Geral:</span>
+          <span class="p-total-val">R$ 4.792,00</span>
+        </div>
+        <div class="p-actions">
+          <div class="p-btn-act p-btn-act-blue">📄 Gerar PDF</div>
+          <div class="p-btn-act p-btn-act-gray">🤖 Copiar p/ IA</div>
+          <div class="p-btn-act p-btn-act-gray">🖨️ Relatório</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

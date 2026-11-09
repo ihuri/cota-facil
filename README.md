@@ -10,6 +10,22 @@
 
 ---
 
+## 📸 Demonstração / Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/screenshot1-captura.png" alt="Captura de Produtos e Orçamentos com CotaFácil" width="100%" />
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/screenshot2-relatorio-pdf.png" alt="Relatório em PDF Profissional" width="100%" />
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/screenshot3-ia-compartilhamento.png" alt="Revisão com IA e Compartilhamento JSON" width="100%" />
+</p>
+
+---
+
 ## ✨ Principais Funcionalidades
 
 * 🛍️ **Captura Automática em Lojas Online**: Detecta automaticamente **Nome do Produto**, **Preço**, **URL canônica limpa** (sem UTMs de rastreio) e captura instantaneamente o **print da tela / produto** através da API nativa do Chrome.

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot 2 - Relatório e PDF</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 1280px;
+      height: 800px;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 70%);
+      color: #ffffff;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .top-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #6ee7b7;
+    }
+
+    /* Paper Document Preview */
+    .document-preview-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+
+    .paper-card {
+      width: 920px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15);
+      padding: 28px 36px;
+      color: #0f172a;
+    }
+
+    /* Action bar inside report */
+    .report-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-bottom: 20px;
+    }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: #059669;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .report-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-act {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-blue { background: #2563eb; color: #fff; }
+    .btn-white { background: #fff; border: 1px solid #cbd5e1; color: #334155; }
+
+    /* Header inside paper */
+    .paper-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .paper-title { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+    .paper-meta { font-size: 12px; color: #64748b; }
+    .paper-total-card {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 10px 18px;
+      text-align: right;
+    }
+    .paper-total-card span { font-size: 10px; font-weight: 800; color: #2563eb; letter-spacing: 0.5px; }
+    .paper-total-card strong { display: block; font-size: 20px; font-weight: 900; color: #1e3a8a; }
+
+    /* Items in 3 lines */
+    .items-grid {
+      display: flex;
+      gap: 16px;
+    }
+    .item-card {
+      flex: 1;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      background: #fafafa;
+    }
+    .item-line-1 {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .item-line-1 .price { color: #059669; }
+    .item-line-2-img {
+      height: 90px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #64748b;
+    }
+    .item-line-3-link {
+      font-size: 11px;
+      color: #2563eb;
+      text-decoration: underline;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-banner">
+    <div>
+      <span class="badge">Exportação & Impressão</span>
+      <h1 class="hero-title">Relatórios em PDF Profissionais com Prints e Links</h1>
+      <p class="hero-sub">Estrutura de 3 linhas por produto: Nome e Valor, Foto da Tela e Link direto para compra.</p>
+    </div>
+    <div class="brand-logo">
+      <span>📄</span> PDF Nativo
+    </div>
+  </div>
+
+  <div class="document-preview-container">
+    <div class="paper-card">
+      <div class="report-actions-bar">
+        <span class="status-pill">Relatório Consolidado</span>
+        <div class="report-btns">
+          <button class="btn-act btn-blue">🖨️ Salvar como PDF / Imprimir</button>
+          <button class="btn-act btn-white">⬇️ Baixar Arquivo .PDF</button>
+          <button class="btn-act btn-white">🤖 Copiar p/ IA</button>
+        </div>
+      </div>
+
+      <div class="paper-header">
+        <div>
+          <h2 class="paper-title">CotaFácil • Orçamento: PC ENGENHARIA</h2>
+          <p class="paper-meta">Emitido em: 09/11/2026 • Total de Produtos: 9 itens selecionados</p>
+        </div>
+        <div class="paper-total-card">
+          <span>VALOR TOTAL DO ORÇAMENTO</span>
+          <strong>R$ 4.792,00</strong>
+        </div>
+      </div>
+
+      <div class="items-grid">
+        <!-- Item 1 -->
+        <div class="item-card">
+          <div class="item-line-1">
+            <span>1. Placa-Mãe AMD B550M</span>
+            <span class="price">R$ 1.333,32</span>
+          </div>
+          <div class="item-line-2-img">
+            📸 Print da Tela (KaBuM)
+          </div>
+          <div class="item-line-3-link">
+            Link: https://www.kabum.com.br/produto/placa-mae-amd...
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="item-card">
+          <div class="item-line-1">
+            <span>2. SSD Kingston 1TB NVMe</span>
+            <span class="price">R$ 993,00</span>
+          </div>
+          <div class="item-line-2-img">
+            📸 Print da Tela (Amazon)
+          </div>
+          <div class="item-line-3-link">
+            Link: https://www.amazon.com.br/dp/B0BBWH1R8H...
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="item-card">
+          <div class="item-line-1">
+            <span>3. Monitor Dell 27" 4K</span>
+            <span class="price">R$ 1.899,00</span>
+          </div>
+          <div class="item-line-2-img">
+            📸 Print da Tela (Mercado Livre)
+          </div>
+          <div class="item-line-3-link">
+            Link: https://www.mercadolivre.com.br/p/MLB2891...
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
