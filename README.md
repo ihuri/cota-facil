@@ -22,10 +22,11 @@ Extensão moderna e leve (sem dependências de compilação ou bundlers) para o 
 
 ## 🛠️ Como Utilizar
 
-### 1. Criar e Gerenciar Orçamentos
+### 1. Criar, Gerenciar e Duplicar Orçamentos
 - Ao clicar no ícone da extensão, você verá o seletor de orçamentos no topo.
 - Clique em **`+ Novo`** para criar um novo orçamento (ex: *"PC Gamer"*, *"Reforma Cozinha"*, *"Suprimentos Escritório"*).
 - Você pode alternar entre orçamentos a qualquer momento através do menu dropdown.
+- **📑 Duplicar Orçamento**: Cria instantaneamente uma cópia independente do orçamento ativo com todos os produtos, links e prints. Ideal para testar alternativas de peças ou trocar de fornecedor sem perder o histórico do orçamento original.
 - Utilize os botões **✏️** (renomear) e **🗑️** (excluir) para organizar seus orçamentos.
 
 ### 2. Capturar Produtos em Lojas Online
@@ -41,10 +42,14 @@ Extensão moderna e leve (sem dependências de compilação ou bundlers) para o 
 - Os itens adicionados aparecem na seção inferior com foto, link e botões de quantidade (`+` e `-`).
 - O **Total Geral** do orçamento selecionado é calculado e atualizado em tempo real.
 
-### 4. Gerar o Relatório em PDF
-A extensão oferece duas formas complementares para gerar o PDF:
+### 4. Gerar Relatório em PDF e Enviar para IA
 
-1. **Botão `📄 Gerar PDF` (Download Direto)**:
+1. **Botão `🤖 Copiar p/ IA`**:
+   - Copia com 1 clique todo o resumo do orçamento (título, quantidade de itens, produtos detalhados com valores unitários, quantidades, subtotais, links e total geral).
+   - Inclui instruções automáticas para a IA avaliar compatibilidade, pesquisar se os preços estão competitivos e recomendar alternativas de melhor custo-benefício.
+   - Basta clicar e colar diretamente no ChatGPT, Claude, Gemini ou qualquer outro assistente!
+
+2. **Botão `📄 Gerar PDF` (Download Direto)**:
    - Compila e faz o download imediato do arquivo `.pdf` formatado no seu computador.
    - Cada produto é apresentado na estrutura solicitada:
      - **Linha 1**: `Nome do Produto - R$ Valor (Qtd: X = Subtotal)`
@@ -53,7 +58,7 @@ A extensão oferece duas formas complementares para gerar o PDF:
      - **Rodapé**: Total Consolidado do Orçamento.
    - *Opção adicional*: Você pode marcar a caixa *"Atualizar prints das páginas ao gerar PDF"* se desejar que a extensão reabra as URLs em segundo plano para tirar prints novos antes de compilar.
 
-2. **Botão `🖨️ Relatório` (Visualização Web & Impressão)**:
+3. **Botão `🖨️ Relatório` (Visualização Web & Impressão)**:
    - Abre uma aba com o relatório completo formatado.
    - Permite usar o botão nativo do Chrome para **Salvar como PDF** com alta resolução ou imprimir diretamente em papel.
 

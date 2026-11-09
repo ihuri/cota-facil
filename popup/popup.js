@@ -225,6 +225,9 @@ function setupEventListeners() {
     document.getElementById('modal-budget-name').focus();
   });
 
+  // Duplicar Orçamento
+  document.getElementById('btn-duplicate-budget').addEventListener('click', duplicateActiveBudget);
+
   // Renomear Orçamento
   document.getElementById('btn-edit-budget').addEventListener('click', () => {
     const budget = getActiveBudget();
@@ -416,9 +419,93 @@ function setupEventListeners() {
       url: chrome.runtime.getURL(`report/report.html?id=${budget.id}`)
     });
   });
+
+  // Copiar dados formatados para IA
+  document.getElementById('btn-copy-ai').addEventListener('click', copyBudgetForAI);
 }
 
-// 6. Helpers de manipulação de itens
+// 6. Funções de Duplicação e Exportação para IA
+async function duplicateActiveBudget() {
+  const budget = getActiveBudget();
+  if (!budget) return;
+
+  const newId = 'budget-' + Date.now();
+  const clonedItems = (budget.items || []).map(item => ({
+    ...item,
+    id: 'item-' + Math.random().toString(36).substring(2, 9) + '-' + Date.now()
+  }));
+
+  const newBudget = {
+    id: newId,
+    name: `${budget.name || 'Orçamento'} (Cópia)`,
+    createdAt: new Date().toISOString(),
+    items: clonedItems
+  };
+
+  state.budgets.push(newBudget);
+  state.activeBudgetId = newId;
+  await saveState();
+
+  renderBudgetSelect();
+  renderActiveBudgetItems();
+  setStatus('success', `Orçamento duplicado como "${newBudget.name}"!`);
+}
+
+async function copyBudgetForAI() {
+  const budget = getActiveBudget();
+  if (!budget || !budget.items || budget.items.length === 0) {
+    alert('Adicione pelo menos um produto ao orçamento antes de copiar para a IA.');
+    return;
+  }
+
+  const totalItems = budget.items.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+  const totalAmount = budget.items.reduce((acc, it) => acc + ((Number(it.price) || 0) * (Number(it.quantity) || 1)), 0);
+  const dateStr = budget.createdAt ? new Date(budget.createdAt).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+
+  let text = `📦 DADOS DE COTAÇÃO / ORÇAMENTO PARA REVISÃO\n`;
+  text += `Orçamento: ${budget.name || 'Orçamento de Compras'}\n`;
+  text += `Data de Emissão: ${dateStr}\n`;
+  text += `Quantidade Total de Produtos: ${totalItems}\n`;
+  text += `Valor Total: ${formatCurrency(totalAmount)}\n\n`;
+  text += `--- LISTA DE ITENS ---\n`;
+
+  budget.items.forEach((item, index) => {
+    const unitPrice = Number(item.price) || 0;
+    const qty = Number(item.quantity) || 1;
+    const subtotal = unitPrice * qty;
+    text += `${index + 1}. ${item.title || 'Produto sem título'}\n`;
+    text += `   - Preço Unitário: ${formatCurrency(unitPrice)}\n`;
+    text += `   - Quantidade: ${qty}\n`;
+    if (qty > 1) {
+      text += `   - Subtotal: ${formatCurrency(subtotal)}\n`;
+    }
+    text += `   - Link: ${item.url || 'Não informado'}\n\n`;
+  });
+
+  text += `--- TOTAL GERAL: ${formatCurrency(totalAmount)} ---\n\n`;
+  text += `🤖 INSTRUÇÕES PARA A IA:\n`;
+  text += `Por favor, revise este orçamento de compras:\n`;
+  text += `1. Avalie se os preços estão competitivos e condizentes com o mercado.\n`;
+  text += `2. Analise se os itens são compatíveis entre si ou atendem bem ao objetivo da compra.\n`;
+  text += `3. Sugira alternativas de melhor custo-benefício, marcas recomendadas ou possíveis itens esquecidos.\n`;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    setStatus('success', '📋 Dados copiados! Cole no ChatGPT, Claude ou Gemini.');
+  } catch (err) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    setStatus('success', '📋 Dados copiados! Cole na sua IA favorita.');
+  }
+}
+
+// 7. Helpers de manipulação de itens
 async function updateItemQty(itemId, delta) {
   const budget = getActiveBudget();
   const item = (budget.items || []).find(it => it.id === itemId);

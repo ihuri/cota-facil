@@ -52,6 +52,57 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.disabled = false;
     }
   });
+
+  // Botão de Copiar dados para IA
+  document.getElementById('btn-copy-ai').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-copy-ai');
+    const originalHtml = btn.innerHTML;
+
+    const items = budget.items || [];
+    if (items.length === 0) {
+      alert('Não há itens neste orçamento para copiar.');
+      return;
+    }
+
+    const totalItems = items.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+    const totalAmount = items.reduce((acc, it) => acc + ((Number(it.price) || 0) * (Number(it.quantity) || 1)), 0);
+    const dateStr = budget.createdAt ? new Date(budget.createdAt).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+
+    let text = `📦 DADOS DE COTAÇÃO / ORÇAMENTO PARA REVISÃO\n`;
+    text += `Orçamento: ${budget.name || 'Orçamento de Compras'}\n`;
+    text += `Data de Emissão: ${dateStr}\n`;
+    text += `Quantidade Total de Produtos: ${totalItems}\n`;
+    text += `Valor Total: ${formatCurrency(totalAmount)}\n\n`;
+    text += `--- LISTA DE ITENS ---\n`;
+
+    items.forEach((item, index) => {
+      const unitPrice = Number(item.price) || 0;
+      const qty = Number(item.quantity) || 1;
+      const subtotal = unitPrice * qty;
+      text += `${index + 1}. ${item.title || 'Produto sem título'}\n`;
+      text += `   - Preço Unitário: ${formatCurrency(unitPrice)}\n`;
+      text += `   - Quantidade: ${qty}\n`;
+      if (qty > 1) {
+        text += `   - Subtotal: ${formatCurrency(subtotal)}\n`;
+      }
+      text += `   - Link: ${item.url || 'Não informado'}\n\n`;
+    });
+
+    text += `--- TOTAL GERAL: ${formatCurrency(totalAmount)} ---\n\n`;
+    text += `🤖 INSTRUÇÕES PARA A IA:\n`;
+    text += `Por favor, revise este orçamento de compras:\n`;
+    text += `1. Avalie se os preços estão competitivos e condizentes com o mercado.\n`;
+    text += `2. Analise se os itens são compatíveis entre si ou atendem bem ao objetivo da compra.\n`;
+    text += `3. Sugira alternativas de melhor custo-benefício, marcas recomendadas ou possíveis itens esquecidos.\n`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.innerHTML = '✓ Copiado p/ IA!';
+      setTimeout(() => { btn.innerHTML = originalHtml; }, 2500);
+    } catch (err) {
+      alert('Erro ao copiar: ' + err.message);
+    }
+  });
 });
 
 function formatCurrency(val) {
