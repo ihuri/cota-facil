@@ -1,6 +1,6 @@
 /**
  * Background Service Worker (Manifest V3)
- * Gerencia ciclo de vida, captura de tela e suporte a prints em lote
+ * Gerencia ciclo de vida, captura de tela, prints e varredura de preços em lote
  */
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -34,14 +34,114 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true; // resposta assíncrona
   }
 
-  // Captura em lote: abre cada URL, aguarda carregar, tira print e fecha aba
+  // Captura em lote de prints para o PDF
   if (message.action === 'BATCH_CAPTURE_ITEMS') {
     handleBatchCapture(message.items)
       .then(updatedItems => sendResponse({ success: true, items: updatedItems }))
       .catch(err => sendResponse({ success: false, error: err.message }));
     return true; // assíncrono
   }
+
+  // Varredura completa: atualiza preços E prints de todos os produtos do orçamento
+  if (message.action === 'SWEEP_AND_UPDATE_BUDGET') {
+    handleSweepAndUpdate(message.items)
+      .then(result => sendResponse({ success: true, items: result.items, updatedCount: result.updatedCount }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true; // assíncrono
+  }
 });
+
+/**
+ * Varre todos os itens: abre cada URL, re-extrai o preço mais recente e tira novo print
+ */
+async function handleSweepAndUpdate(items) {
+  const results = [];
+  let updatedCount = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = { ...items[i] };
+
+    // Notifica o progresso para a interface do popup
+    chrome.runtime.sendMessage({
+      action: 'SWEEP_PROGRESS',
+      current: i + 1,
+      total: items.length,
+      title: item.title || 'Produto'
+    }).catch(() => {}); // ignora se popup fechou
+
+    if (!item.url || !item.url.startsWith('http')) {
+      results.push(item);
+      continue;
+    }
+
+    try {
+      // Abre aba temporária
+      const tab = await chrome.tabs.create({ url: item.url, active: false });
+
+      // Aguarda carregamento inicial
+      await waitForTabLoaded(tab.id, 9000);
+
+      // Pequena pausa para garantir execução de scripts da página (preços dinâmicos)
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Injeta o extractor de dados na página
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['content/extractor.js']
+        });
+
+        // Extrai os dados atualizados
+        const extractRes = await new Promise((resolve) => {
+          chrome.tabs.sendMessage(tab.id, { action: 'EXTRACT_PRODUCT' }, (res) => {
+            resolve(res && res.success ? res.data : null);
+          });
+        });
+
+        if (extractRes) {
+          if (extractRes.price && extractRes.price > 0) {
+            item.price = extractRes.price;
+          }
+          if (extractRes.title && (!item.title || item.title === 'Produto sem título')) {
+            item.title = extractRes.title;
+          }
+        }
+      } catch (errExtract) {
+        console.warn('Erro na extração de dados do item:', item.url, errExtract);
+      }
+
+      // Ativa momentaneamente a aba para captura de print fiel
+      await chrome.tabs.update(tab.id, { active: true });
+      await new Promise(r => setTimeout(r, 450));
+
+      const screenshot = await new Promise((resolve) => {
+        chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 75 }, (dataUrl) => {
+          if (chrome.runtime.lastError) {
+            resolve(null);
+          } else {
+            resolve(dataUrl);
+          }
+        });
+      });
+
+      if (screenshot) {
+        item.screenshotDataUrl = screenshot;
+      }
+
+      item.lastCheckedAt = new Date().toISOString();
+      updatedCount++;
+
+      // Fecha a aba temporária
+      await chrome.tabs.remove(tab.id);
+    } catch (e) {
+      console.warn('Erro ao varrer URL:', item.url, e);
+    }
+
+    results.push(item);
+  }
+
+  return { items: results, updatedCount };
+}
 
 /**
  * Abre cada item em aba secundária, captura a tela e fecha
@@ -57,20 +157,13 @@ async function handleBatchCapture(items) {
     }
 
     try {
-      // Abre aba temporária inativa
       const tab = await chrome.tabs.create({ url: item.url, active: false });
-
-      // Aguarda carregamento com timeout de segurança
       await waitForTabLoaded(tab.id, 8000);
-
-      // Pequena pausa para garantir renderização de imagens e preços
       await new Promise(r => setTimeout(r, 1200));
 
-      // Ativa momentaneamente para captura confiável
       await chrome.tabs.update(tab.id, { active: true });
       await new Promise(r => setTimeout(r, 400));
 
-      // Captura a tela
       const screenshot = await new Promise((resolve) => {
         chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 75 }, (dataUrl) => {
           if (chrome.runtime.lastError) {
@@ -85,7 +178,6 @@ async function handleBatchCapture(items) {
         item.screenshotDataUrl = screenshot;
       }
 
-      // Fecha a aba temporária
       await chrome.tabs.remove(tab.id);
     } catch (e) {
       console.warn('Erro ao capturar URL:', item.url, e);

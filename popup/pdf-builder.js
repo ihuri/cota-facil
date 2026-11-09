@@ -269,7 +269,7 @@ class NativePdfBuilder {
       p.content.push(`0.5 0.55 0.6 rg`);
       const pageNumberStr = this.sanitizeText(`Pagina ${pIdx + 1} de ${totalPagesCount}`);
       p.content.push(`BT /F1 9 Tf ${this.pageWidth - margin - 80} 25 Td (${pageNumberStr}) Tj ET`);
-      p.content.push(`BT /F1 8 Tf ${margin} 25 Td (${this.sanitizeText('Gerado por Gestor de Orcamentos - Extensao Chrome')}) Tj ET`);
+      p.content.push(`BT /F1 8 Tf ${margin} 25 Td (${this.sanitizeText('Gerado por CotaFacil - Extensao Google Chrome')}) Tj ET`);
     });
 
     return this.compilePdf();

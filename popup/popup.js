@@ -422,6 +422,173 @@ function setupEventListeners() {
 
   // Copiar dados formatados para IA
   document.getElementById('btn-copy-ai').addEventListener('click', copyBudgetForAI);
+
+  // Varredura de Preços e Imagens
+  document.getElementById('btn-sweep-budget').addEventListener('click', sweepAndUpdateActiveBudget);
+
+  // Exportar e Importar JSON
+  document.getElementById('btn-export-json').addEventListener('click', exportActiveBudgetJson);
+  document.getElementById('btn-import-json').addEventListener('click', () => {
+    document.getElementById('input-import-json').click();
+  });
+  document.getElementById('input-import-json').addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) {
+      importBudgetFromJsonFile(e.target.files[0]);
+      e.target.value = ''; // reseta para permitir carregar o mesmo arquivo novamente se quiser
+    }
+  });
+}
+
+// Ouvinte de progresso da varredura
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'SWEEP_PROGRESS') {
+    const textEl = document.getElementById('sweep-progress-text');
+    const countEl = document.getElementById('sweep-progress-count');
+    const barEl = document.getElementById('sweep-progress-bar');
+    if (textEl && countEl && barEl) {
+      const pct = Math.round((message.current / message.total) * 100);
+      const shortTitle = (message.title || 'Produto').substring(0, 32);
+      textEl.textContent = `Atualizando: ${shortTitle}...`;
+      countEl.textContent = `${message.current}/${message.total}`;
+      barEl.style.width = `${pct}%`;
+    }
+  }
+});
+
+// Varredura completa dos produtos do orçamento ativo
+async function sweepAndUpdateActiveBudget() {
+  const budget = getActiveBudget();
+  const items = budget.items || [];
+  if (items.length === 0) {
+    alert('Adicione pelo menos um produto com link ao orçamento antes de atualizar.');
+    return;
+  }
+
+  const btnSweep = document.getElementById('btn-sweep-budget');
+  const originalSweepHtml = btnSweep.innerHTML;
+  const progressBox = document.getElementById('sweep-progress-box');
+  const textEl = document.getElementById('sweep-progress-text');
+  const countEl = document.getElementById('sweep-progress-count');
+  const barEl = document.getElementById('sweep-progress-bar');
+
+  btnSweep.disabled = true;
+  btnSweep.innerHTML = '⏳ Atualizando...';
+  progressBox.classList.remove('hidden');
+  barEl.style.width = '0%';
+  textEl.textContent = 'Iniciando varredura...';
+  countEl.textContent = `0/${items.length}`;
+
+  try {
+    const response = await new Promise((resolve) => {
+      chrome.runtime.sendMessage({
+        action: 'SWEEP_AND_UPDATE_BUDGET',
+        items: items
+      }, resolve);
+    });
+
+    if (response && response.success && response.items) {
+      budget.items = response.items;
+      await saveState();
+      renderActiveBudgetItems();
+      setStatus('success', `Varredura concluída! ${response.updatedCount} item(ns) checado(s).`);
+    } else {
+      alert('Falha na varredura: ' + (response?.error || 'Erro desconhecido'));
+    }
+  } catch (err) {
+    alert('Erro durante a varredura: ' + err.message);
+  } finally {
+    btnSweep.disabled = false;
+    btnSweep.innerHTML = originalSweepHtml;
+    setTimeout(() => {
+      progressBox.classList.add('hidden');
+    }, 2000);
+  }
+}
+
+// Exportar Orçamento Ativo como JSON
+function exportActiveBudgetJson() {
+  const budget = getActiveBudget();
+  if (!budget) return;
+
+  const exportPayload = {
+    app: "gestor-orcamentos-chrome",
+    version: "1.0",
+    exportedAt: new Date().toISOString(),
+    budget: budget
+  };
+
+  const jsonStr = JSON.stringify(exportPayload, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const downloadUrl = URL.createObjectURL(blob);
+  const safeName = (budget.name || 'Orcamento').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = `Orcamento_${safeName}_${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(downloadUrl);
+
+  setStatus('success', `Orçamento "${budget.name}" exportado com sucesso!`);
+}
+
+// Importar Orçamento a partir de arquivo JSON
+function importBudgetFromJsonFile(file) {
+  const reader = new FileReader();
+
+  reader.onload = async (e) => {
+    try {
+      const content = e.target.result;
+      const data = JSON.parse(content);
+
+      // Suporta formato envelopado { budget: ... } ou direto { id, name, items }
+      const importedBudget = data.budget || (data.items && data.name ? data : null);
+
+      if (!importedBudget || !importedBudget.name || !Array.isArray(importedBudget.items)) {
+        alert('Arquivo JSON inválido ou incompatível com o Gestor de Orçamentos.');
+        return;
+      }
+
+      // Gera novo ID único para não colidir com orçamentos existentes
+      const newBudgetId = 'budget-' + Date.now();
+      
+      // Ajusta nome para indicar importação se já existir nome idêntico
+      const existingSameName = state.budgets.some(b => b.name === importedBudget.name);
+      const finalName = existingSameName ? `${importedBudget.name} (Importado)` : importedBudget.name;
+
+      // Re-id em todos os itens para integridade
+      const itemsWithNewIds = importedBudget.items.map((it, idx) => ({
+        ...it,
+        id: 'item-' + Date.now() + '-' + idx
+      }));
+
+      const newBudget = {
+        id: newBudgetId,
+        name: finalName,
+        createdAt: importedBudget.createdAt || new Date().toISOString(),
+        items: itemsWithNewIds
+      };
+
+      state.budgets.push(newBudget);
+      state.activeBudgetId = newBudgetId;
+      await saveState();
+
+      renderBudgetSelect();
+      renderActiveBudgetItems();
+      setStatus('success', `Orçamento "${finalName}" importado com sucesso (${itemsWithNewIds.length} itens)!`);
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao processar o arquivo JSON: ' + err.message);
+    }
+  };
+
+  reader.onerror = () => {
+    alert('Erro ao ler o arquivo selecionado.');
+  };
+
+  reader.readAsText(file);
 }
 
 // 6. Funções de Duplicação e Exportação para IA

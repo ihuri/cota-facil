@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestor de Orçamentos</title>
+  <title>CotaFácil - Gestor de Orçamentos</title>
   <link rel="stylesheet" href="popup.css">
   <script src="pdf-builder.js"></script>
 </head>
@@ -14,7 +14,7 @@
       <div class="brand-row">
         <div class="brand-title">
           <span class="icon">🛒</span>
-          <h2>Orçamentos</h2>
+          <h2>CotaFácil</h2>
         </div>
         <button id="btn-new-budget" class="btn btn-sm btn-outline-primary" title="Criar novo orçamento">
           + Novo
@@ -22,13 +22,40 @@
       </div>
 
       <div class="budget-selector-bar">
-        <label for="budget-select" class="sr-only">Orçamento ativo</label>
-        <select id="budget-select" class="form-select">
+        <select id="budget-select" class="form-select" aria-label="Orçamento ativo">
           <!-- Opções preenchidas via JS -->
         </select>
-        <button id="btn-duplicate-budget" class="icon-btn" title="Duplicar orçamento atual (criar cópia)">📑</button>
-        <button id="btn-edit-budget" class="icon-btn" title="Renomear orçamento atual">✏️</button>
-        <button id="btn-delete-budget" class="icon-btn icon-btn-danger" title="Excluir orçamento atual">🗑️</button>
+        <button id="btn-duplicate-budget" class="icon-btn" title="Duplicar orçamento atual (criar cópia)" aria-label="Duplicar orçamento">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <button id="btn-edit-budget" class="icon-btn" title="Renomear orçamento atual" aria-label="Renomear orçamento">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+        </button>
+        <button id="btn-delete-budget" class="icon-btn icon-btn-danger" title="Excluir orçamento atual" aria-label="Excluir orçamento">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Barra de Compartilhamento JSON -->
+      <div class="budget-backup-bar">
+        <button id="btn-export-json" class="btn-subtle" title="Exportar este orçamento como arquivo .json">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Exportar JSON
+        </button>
+        <button id="btn-import-json" class="btn-subtle" title="Importar orçamento de um arquivo .json">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Importar JSON
+        </button>
+        <input type="file" id="input-import-json" accept=".json" style="display: none;" />
       </div>
     </header>
 
@@ -96,7 +123,29 @@
     <section class="card items-card">
       <div class="card-header">
         <span class="card-title">Itens do Orçamento (<span id="items-count">0</span>)</span>
-        <button id="btn-clear-items" class="text-link text-danger" title="Limpar todos os itens deste orçamento">Limpar</button>
+        <div class="card-header-actions">
+          <button id="btn-sweep-budget" class="text-link text-primary-link" title="Abrir todas as páginas em segundo plano para atualizar preços e prints">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            Atualizar Preços
+          </button>
+          <span class="action-divider">•</span>
+          <button id="btn-clear-items" class="text-link text-danger" title="Limpar todos os itens deste orçamento">Limpar</button>
+        </div>
+      </div>
+
+      <!-- Barra de Progresso da Varredura -->
+      <div id="sweep-progress-box" class="progress-box hidden">
+        <div class="progress-header">
+          <span id="sweep-progress-text">Varrendo produtos...</span>
+          <span id="sweep-progress-count">0/0</span>
+        </div>
+        <div class="progress-track">
+          <div id="sweep-progress-bar" class="progress-fill" style="width: 0%;"></div>
+        </div>
       </div>
 
       <div id="items-list" class="items-list-container">

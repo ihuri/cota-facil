@@ -56,7 +56,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .brand-title {
@@ -79,17 +79,19 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
 }
 
 .form-select {
   flex: 1;
+  min-width: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--gray-800);
   background-color: var(--gray-50);
   border: 1px solid var(--gray-300);
   border-radius: 6px;
-  padding: 6px 10px;
+  padding: 6px 8px;
   outline: none;
   cursor: pointer;
   transition: border-color 0.15s;
@@ -101,23 +103,99 @@ body {
 }
 
 .icon-btn {
-  background: none;
-  border: 1px solid var(--gray-200);
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid var(--gray-300);
   border-radius: 6px;
-  padding: 5px 8px;
-  font-size: 13px;
+  color: var(--gray-600);
   cursor: pointer;
   transition: all 0.15s;
+  padding: 0;
 }
 
 .icon-btn:hover {
   background-color: var(--gray-100);
-  border-color: var(--gray-300);
+  border-color: var(--gray-400);
+  color: var(--gray-900);
+}
+
+.icon-btn-danger {
+  border-color: #fca5a5;
+  background-color: #ffffff;
 }
 
 .icon-btn-danger:hover {
-  background-color: #fef2f2;
-  border-color: #fca5a5;
+  background-color: #fee2e2;
+  border-color: #ef4444;
+}
+
+.icon-btn svg {
+  display: block;
+}
+
+/* Barra de Compartilhamento JSON */
+.budget-backup-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--gray-200);
+}
+
+.btn-subtle {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-700);
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 5px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-subtle:hover {
+  background-color: var(--gray-100);
+  border-color: var(--gray-400);
+  color: var(--gray-900);
+}
+
+.btn-subtle svg {
+  color: var(--gray-500);
+}
+
+.btn-subtle:hover svg {
+  color: var(--primary);
+}
+
+.text-primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Acessibilidade */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Modal Inline */
@@ -193,6 +271,53 @@ body {
 
 .text-link:hover {
   color: var(--primary-hover);
+}
+
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-divider {
+  color: var(--gray-300);
+  font-size: 11px;
+}
+
+/* Barra de Progresso da Varredura */
+.progress-box {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+
+.progress-box.hidden {
+  display: none;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #1e40af;
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  height: 6px;
+  background-color: #dbeafe;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #059669);
+  transition: width 0.3s ease;
 }
 
 .text-danger {
