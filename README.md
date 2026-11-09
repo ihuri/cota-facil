@@ -127,6 +127,12 @@ cota-facil/
 
 ---
 
+## 🔒 Privacidade
+
+O CotaFácil preza 100% pela privacidade dos usuários: não coletamos, não rastreamos e não enviamos dados para servidores externos. Todos os orçamentos e prints são salvos exclusivamente no seu computador. Consulte a [Política de Privacidade](PRIVACY.md) completa para mais detalhes.
+
+---
+
 ## 📄 Licença
 
 Este projeto está licenciado sob a licença **MIT** — consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
