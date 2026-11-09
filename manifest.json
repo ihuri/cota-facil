@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CotaFácil - Gestor de Orçamentos de Compras",
   "version": "1.0.0",
-  "description": "Capture produtos de lojas online, gerencie múltiplos orçamentos concorrentes com prints da tela e exporte relatórios em PDF e dados para IA.",
+  "description": "Capture produtos em lojas com prints e preços, gerencie múltiplos orçamentos e exporte relatórios em PDF e dados para IA.",
   "permissions": [
     "storage",
     "unlimitedStorage",
