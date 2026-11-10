@@ -49,6 +49,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(err => sendResponse({ success: false, error: err.message }));
     return true; // assíncrono
   }
+
+  // Testar conexão de Webhook
+  if (message.action === 'TEST_WEBHOOK') {
+    handleTestWebhook(message.config)
+      .then(result => sendResponse({ success: true, ...result }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true; // assíncrono
+  }
+
+  // Enviar orçamento via Webhook
+  if (message.action === 'SEND_BUDGET_WEBHOOK') {
+    handleSendWebhook(message.config, message.budget)
+      .then(result => sendResponse({ success: true, ...result }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true; // assíncrono
+  }
 });
 
 /**
@@ -214,4 +230,120 @@ function waitForTabLoaded(tabId, timeoutMs = 8000) {
 
     chrome.tabs.onUpdated.addListener(listener);
   });
+}
+
+/**
+ * Lógica de Webhook para envio a sistemas terceiros
+ */
+async function handleSendWebhook(config, budget) {
+  if (!config || !config.url) {
+    throw new Error('URL do Webhook não configurada. Acesse as configurações para informar o endpoint.');
+  }
+  if (!budget) {
+    throw new Error('Nenhum orçamento selecionado para envio.');
+  }
+
+  const items = (budget.items || []).map(item => {
+    const itemCopy = { ...item };
+    if (!config.includeScreenshots) {
+      delete itemCopy.screenshotDataUrl;
+    }
+    return itemCopy;
+  });
+
+  const totalItems = items.reduce((acc, it) => acc + (Number(it.quantity) || 1), 0);
+  const totalAmount = items.reduce((acc, it) => acc + ((Number(it.price) || 0) * (Number(it.quantity) || 1)), 0);
+
+  const payload = {
+    event: 'budget.sent',
+    app: 'CotaFácil',
+    version: '1.1.0',
+    sentAt: new Date().toISOString(),
+    budget: {
+      id: budget.id,
+      name: budget.name,
+      createdAt: budget.createdAt,
+      totalItems,
+      totalAmount,
+      items
+    }
+  };
+
+  return await executeWebhookRequest(config, payload);
+}
+
+async function handleTestWebhook(config) {
+  if (!config || !config.url) {
+    throw new Error('Informe a URL do Webhook antes de testar.');
+  }
+
+  const testPayload = {
+    event: 'webhook.test',
+    app: 'CotaFácil',
+    version: '1.1.0',
+    sentAt: new Date().toISOString(),
+    message: 'Teste de conexão de Webhook realizado com sucesso pelo CotaFácil!'
+  };
+
+  return await executeWebhookRequest(config, testPayload);
+}
+
+async function executeWebhookRequest(config, payload) {
+  const url = (config.url || '').trim();
+  if (!/^https?:\/\//i.test(url)) {
+    throw new Error('URL inválida. O endereço do Webhook deve iniciar com http:// ou https://');
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos timeout
+
+  const headers = {
+    'Content-Type': 'application/json'
+  };
+
+  if (config.token && config.token.trim()) {
+    const headerName = (config.authHeader && config.authHeader.trim()) ? config.authHeader.trim() : 'Authorization';
+    const tokenVal = config.token.trim();
+    if (headerName.toLowerCase() === 'authorization' && !tokenVal.toLowerCase().startsWith('bearer ')) {
+      headers[headerName] = `Bearer ${tokenVal}`;
+    } else {
+      headers[headerName] = tokenVal;
+    }
+  }
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    let responseData = null;
+    try {
+      responseData = await res.json();
+    } catch {
+      try {
+        responseData = await res.text();
+      } catch {}
+    }
+
+    if (!res.ok) {
+      throw new Error(`Falha HTTP ${res.status}: ${res.statusText || 'Erro na resposta do servidor terceiro'}`);
+    }
+
+    return {
+      status: res.status,
+      statusText: res.statusText,
+      data: responseData
+    };
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('A requisição ao Webhook excedeu o tempo limite de 15 segundos (Timeout).');
+    }
+    throw err;
+  }
 }

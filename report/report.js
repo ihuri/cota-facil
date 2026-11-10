@@ -103,6 +103,53 @@ document.addEventListener('DOMContentLoaded', async () => {
       alert('Erro ao copiar: ' + err.message);
     }
   });
+
+  // Botão de Envio via Webhook
+  const btnWebhook = document.getElementById('btn-send-webhook');
+  if (btnWebhook) {
+    btnWebhook.addEventListener('click', async () => {
+      const originalHtml = btnWebhook.innerHTML;
+
+      const storageData = await chrome.storage.local.get(['webhookConfig']);
+      const webhookConfig = storageData.webhookConfig;
+
+      if (!webhookConfig || !webhookConfig.url) {
+        alert('A URL do Webhook não está configurada. Por favor, abra o popup da extensão e clique em "Webhook" para configurar o endpoint.');
+        return;
+      }
+
+      if (!budget.items || budget.items.length === 0) {
+        alert('Não há itens neste orçamento para enviar.');
+        return;
+      }
+
+      try {
+        btnWebhook.disabled = true;
+        btnWebhook.innerHTML = 'Enviando Webhook...';
+
+        const response = await new Promise((resolve) => {
+          chrome.runtime.sendMessage({
+            action: 'SEND_BUDGET_WEBHOOK',
+            config: webhookConfig,
+            budget: budget
+          }, resolve);
+        });
+
+        if (response && response.success) {
+          btnWebhook.innerHTML = '✓ Enviado (HTTP ' + response.status + ')';
+          setTimeout(() => { btnWebhook.innerHTML = originalHtml; }, 3000);
+        } else {
+          alert('Falha ao enviar para o Webhook: ' + (response?.error || 'Erro desconhecido'));
+          btnWebhook.innerHTML = originalHtml;
+        }
+      } catch (err) {
+        alert('Erro ao enviar Webhook: ' + err.message);
+        btnWebhook.innerHTML = originalHtml;
+      } finally {
+        btnWebhook.disabled = false;
+      }
+    });
+  }
 });
 
 function formatCurrency(val) {

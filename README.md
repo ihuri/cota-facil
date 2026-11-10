@@ -33,6 +33,7 @@
 * 📋 **Duplicar Orçamento com 1 Clique (📑)**: Clone um orçamento completo com todos os produtos e prints para testar variações de peças ou fornecedores sem perder o histórico do original.
 * 🔄 **Varredura e Atualização de Preços**: Abre os links em segundo plano, re-extrai os preços vigentes mais recentes, tira novos prints da tela e recalcula o total com barra de progresso em tempo real.
 * 🤖 **Copiar Formatado para IA (ChatGPT, Claude, Gemini)**: Copia todos os dados estruturados com instruções automáticas para a IA analisar competitividade de preços, compatibilidade entre peças e sugerir alternativas com melhor custo-benefício.
+* 🚀 **Integração com Webhooks**: Envie o orçamento ativo diretamente para sistemas externos (**n8n, Make, Zapier, ERPs ou APIs proprietárias**) via HTTP POST estruturado, com suporte a headers de autenticação e teste de conexão integrado.
 * 📄 **Geração de Relatório em PDF Profissional**:
   * **Linha 1**: `Nome do Produto - R$ Valor (Qtd: X = Subtotal)`
   * **Linha 2**: Imagem / Print da tela do produto (proporção preservada)
@@ -83,10 +84,11 @@
 * Clique em **`🔄 Atualizar Preços`** no cabeçalho da lista de itens.
 * A extensão visitará os links em segundo plano, re-extrairá os preços atualizados e tirará novos prints, recalculando o total final automaticamente.
 
-### 4. Exportando para PDF e Enviando para IA
+### 4. Exportando para PDF, Webhook e IA
 * **`📄 Gerar PDF`**: Faz o download direto de um arquivo `.pdf` formatado contendo nome, valor, print da tela, link clicável e total.
-* **`🖨️ Relatório`**: Abre uma página completa pronta para visualização e impressão em alta resolução.
+* **`🚀 Webhook`**: Envia os dados completos do orçamento para o endpoint configurado (n8n, Make, Zapier, etc.).
 * **`🤖 Copiar p/ IA`**: Copia o texto formatado para a área de transferência. Basta colar (`Ctrl+V` / `Cmd+V`) no ChatGPT, Claude ou Gemini para receber uma análise instantânea!
+* **`🖨️ Relatório`**: Abre uma página completa pronta para visualização e impressão em alta resolução.
 
 ---
 

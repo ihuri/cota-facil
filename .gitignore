@@ -1,3 +1,7 @@
 .DS_Store
 *.zip
 /tmp/
+
+# Imagens de teste recebidas pelo servidor mock de webhook
+webhook_images/
+

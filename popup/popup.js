@@ -9,7 +9,13 @@ let state = {
   currentTab: null,
   detectedData: null,
   currentScreenshot: null,
-  editingBudgetId: null
+  editingBudgetId: null,
+  webhookConfig: {
+    url: '',
+    authHeader: 'Authorization',
+    token: '',
+    includeScreenshots: false
+  }
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -20,7 +26,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // 1. Carrega dados salvos no chrome.storage.local
 async function loadState() {
-  const data = await chrome.storage.local.get(['budgets', 'activeBudgetId']);
+  const data = await chrome.storage.local.get(['budgets', 'activeBudgetId', 'webhookConfig']);
+
+  if (data.webhookConfig) {
+    state.webhookConfig = {
+      ...state.webhookConfig,
+      ...data.webhookConfig
+    };
+  }
   
   if (!data.budgets || data.budgets.length === 0) {
     const defaultId = 'budget-' + Date.now();
@@ -437,6 +450,13 @@ function setupEventListeners() {
       e.target.value = ''; // reseta para permitir carregar o mesmo arquivo novamente se quiser
     }
   });
+
+  // Configurações e Ações de Webhook
+  document.getElementById('btn-webhook-config').addEventListener('click', openWebhookModal);
+  document.getElementById('btn-webhook-cancel').addEventListener('click', closeWebhookModal);
+  document.getElementById('btn-webhook-save').addEventListener('click', saveWebhookFromModal);
+  document.getElementById('btn-webhook-test').addEventListener('click', testWebhookFromModal);
+  document.getElementById('btn-send-webhook').addEventListener('click', sendBudgetWebhook);
 }
 
 // Ouvinte de progresso da varredura
@@ -723,4 +743,143 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+// 8. Funções de Gerenciamento e Disparo de Webhook
+function openWebhookModal() {
+  const modal = document.getElementById('webhook-modal');
+  const urlInput = document.getElementById('webhook-url');
+  const authHeaderInput = document.getElementById('webhook-auth-header');
+  const tokenInput = document.getElementById('webhook-token');
+  const screenshotsCheckbox = document.getElementById('webhook-include-screenshots');
+  const statusEl = document.getElementById('webhook-test-status');
+
+  urlInput.value = state.webhookConfig.url || '';
+  authHeaderInput.value = state.webhookConfig.authHeader || 'Authorization';
+  tokenInput.value = state.webhookConfig.token || '';
+  screenshotsCheckbox.checked = Boolean(state.webhookConfig.includeScreenshots);
+
+  statusEl.className = 'status-msg hidden';
+  statusEl.textContent = '';
+  modal.classList.remove('hidden');
+}
+
+function closeWebhookModal() {
+  document.getElementById('webhook-modal').classList.add('hidden');
+}
+
+async function saveWebhookFromModal() {
+  const url = document.getElementById('webhook-url').value.trim();
+  const authHeader = document.getElementById('webhook-auth-header').value.trim() || 'Authorization';
+  const token = document.getElementById('webhook-token').value.trim();
+  const includeScreenshots = document.getElementById('webhook-include-screenshots').checked;
+
+  if (url && !/^https?:\/\//i.test(url)) {
+    alert('A URL deve iniciar com http:// ou https://');
+    return;
+  }
+
+  state.webhookConfig = {
+    url,
+    authHeader,
+    token,
+    includeScreenshots
+  };
+
+  await chrome.storage.local.set({ webhookConfig: state.webhookConfig });
+  closeWebhookModal();
+  setStatus('success', 'Configurações de Webhook salvas com sucesso!');
+}
+
+async function testWebhookFromModal() {
+  const url = document.getElementById('webhook-url').value.trim();
+  const authHeader = document.getElementById('webhook-auth-header').value.trim() || 'Authorization';
+  const token = document.getElementById('webhook-token').value.trim();
+  const statusEl = document.getElementById('webhook-test-status');
+  const btnTest = document.getElementById('btn-webhook-test');
+
+  if (!url) {
+    statusEl.className = 'status-msg error';
+    statusEl.textContent = 'Informe a URL do Webhook antes de testar.';
+    statusEl.classList.remove('hidden');
+    return;
+  }
+
+  if (!/^https?:\/\//i.test(url)) {
+    statusEl.className = 'status-msg error';
+    statusEl.textContent = 'URL inválida. Deve iniciar com http:// ou https://';
+    statusEl.classList.remove('hidden');
+    return;
+  }
+
+  btnTest.disabled = true;
+  btnTest.innerHTML = '⏳ Testando...';
+  statusEl.className = 'status-msg info';
+  statusEl.textContent = 'Enviando pacote de teste...';
+  statusEl.classList.remove('hidden');
+
+  try {
+    const response = await new Promise((resolve) => {
+      chrome.runtime.sendMessage({
+        action: 'TEST_WEBHOOK',
+        config: { url, authHeader, token }
+      }, resolve);
+    });
+
+    if (response && response.success) {
+      statusEl.className = 'status-msg success';
+      statusEl.textContent = `✅ Sucesso! Conexão validada (HTTP ${response.status}).`;
+    } else {
+      statusEl.className = 'status-msg error';
+      statusEl.textContent = `❌ Falha: ${response?.error || 'Não foi possível conectar ao Webhook'}`;
+    }
+  } catch (err) {
+    statusEl.className = 'status-msg error';
+    statusEl.textContent = `❌ Erro no teste: ${err.message}`;
+  } finally {
+    btnTest.disabled = false;
+    btnTest.innerHTML = '🧪 Testar';
+  }
+}
+
+async function sendBudgetWebhook() {
+  if (!state.webhookConfig || !state.webhookConfig.url) {
+    if (confirm('A URL do Webhook ainda não foi configurada. Deseja configurá-la agora?')) {
+      openWebhookModal();
+    }
+    return;
+  }
+
+  const budget = getActiveBudget();
+  if (!budget || !budget.items || budget.items.length === 0) {
+    alert('Adicione pelo menos um produto ao orçamento antes de enviar via Webhook.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-send-webhook');
+  const originalHtml = btn.innerHTML;
+
+  try {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Enviando...';
+
+    const response = await new Promise((resolve) => {
+      chrome.runtime.sendMessage({
+        action: 'SEND_BUDGET_WEBHOOK',
+        config: state.webhookConfig,
+        budget: budget
+      }, resolve);
+    });
+
+    if (response && response.success) {
+      setStatus('success', `🚀 Orçamento enviado com sucesso via Webhook! (HTTP ${response.status})`);
+    } else {
+      setStatus('error', `❌ Falha no Webhook: ${response?.error || 'Erro desconhecido'}`);
+    }
+  } catch (err) {
+    setStatus('error', `❌ Erro no envio: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
 }

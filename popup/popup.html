@@ -45,7 +45,7 @@
         </button>
       </div>
 
-      <!-- Barra de Compartilhamento JSON -->
+      <!-- Barra de Compartilhamento JSON & Configurações -->
       <div class="budget-backup-bar">
         <button id="btn-export-json" class="btn-subtle" title="Exportar este orçamento como arquivo .json">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -54,6 +54,10 @@
         <button id="btn-import-json" class="btn-subtle" title="Importar orçamento de um arquivo .json">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
           Importar JSON
+        </button>
+        <button id="btn-webhook-config" class="btn-subtle" title="Configurar Webhook para integração externa">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Webhook
         </button>
         <input type="file" id="input-import-json" accept=".json" style="display: none;" />
       </div>
@@ -67,6 +71,45 @@
         <div class="modal-actions">
           <button id="btn-modal-cancel" class="btn btn-sm btn-secondary">Cancelar</button>
           <button id="btn-modal-save" class="btn btn-sm btn-primary">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Configurações do Webhook -->
+    <div id="webhook-modal" class="modal hidden">
+      <div class="modal-content">
+        <h4>Configurar Webhook</h4>
+        <p class="modal-hint">Envie o orçamento para n8n, Make, Zapier ou sua API.</p>
+        
+        <div class="form-group">
+          <label for="webhook-url">URL do Webhook *</label>
+          <input type="url" id="webhook-url" class="form-input text-sm" placeholder="https://seu-sistema.com/webhook" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="webhook-auth-header">Header de Auth</label>
+            <input type="text" id="webhook-auth-header" class="form-input text-sm" placeholder="Authorization" value="Authorization" />
+          </div>
+          <div class="form-group col-6">
+            <label for="webhook-token">Token / Secret</label>
+            <input type="password" id="webhook-token" class="form-input text-sm" placeholder="Opcional" />
+          </div>
+        </div>
+
+        <div class="form-group-checkbox">
+          <label>
+            <input type="checkbox" id="webhook-include-screenshots" />
+            <span>Incluir prints dos produtos (Base64)</span>
+          </label>
+        </div>
+
+        <div id="webhook-test-status" class="status-msg hidden"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="btn-webhook-test" class="btn btn-sm btn-outline-primary">🧪 Testar</button>
+          <button type="button" id="btn-webhook-cancel" class="btn btn-sm btn-secondary">Cancelar</button>
+          <button type="button" id="btn-webhook-save" class="btn btn-sm btn-primary">Salvar</button>
         </div>
       </div>
     </div>
@@ -163,6 +206,9 @@
       <div class="footer-actions">
         <button id="btn-generate-pdf" class="btn btn-primary" title="Baixar PDF formatado">
           📄 Gerar PDF
+        </button>
+        <button id="btn-send-webhook" class="btn btn-secondary" title="Enviar orçamento para sistema externo via Webhook">
+          🚀 Webhook
         </button>
         <button id="btn-copy-ai" class="btn btn-secondary" title="Copiar todos os dados formatados para enviar para IA">
           🤖 Copiar p/ IA
